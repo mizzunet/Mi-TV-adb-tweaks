@@ -1,4 +1,4 @@
-Enable ADB in Development Option
+## Enable ADB in Development Option
 
 To do some settings in Android Shell you need to enable adb and download adb.exe here. (SDK Platform Tools PC/MAC)
 
@@ -6,7 +6,7 @@ Enable adb on the device: goto Android Settings > About > click 7 times on the B
 
 Goto Settings again > Find Development Options and enable Android Debugging.
 
-ADB over Wifi
+## ADB over Wifi
 
 Find your device IP address in the network Settings.
 
@@ -23,10 +23,10 @@ Then type adb.exe shell
 The following command sections can be copy & pasted as a block into the adb shell. After that type reboot in the shell.
 
 
-Disable packages  (personal taste)
+## Disable packages  (personal taste)
 
 Tip: use ADB AppControl to disable/enable bloatware packages 
-
+```
 pm disable-user com.amazon.amazonvideo.livingroom                 #Prime Video
 pm disable-user com.android.printspooler                                     #Android Printing
 pm disable-user com.android.providers.calendar                           #we have no Calendar
@@ -55,26 +55,26 @@ pm disable-user com.google.android.feedback
 pm disable-user com.google.android.youtube.tvmusic
 pm disable-user com.mitv.milinkservice                                       #don't if you use googleTV home
 pm disable-user com.mitv.tvhome.michannel                               #don't if you use googleTV home
-
+```
 Note:
 To enable packages: pm enable --user 0 <packagename>
 To reinstall packages: pm install-existing <packagename>
 
 
-Cleanup and free some space
-
+## Cleanup and free some space
+```
 for p in `pm list packages -d -u` ; do pm clear ${p/package:/} ; done #clear the data for every disabled package
 
 pm trim-caches 4096G   #clear app cached data
+```
 
-
-Extra android settings (most actual are in __TV_STICK_MODS.CMD__  )
+## Extra android settings (most actual are in __TV_STICK_MODS.CMD__  )
 
 For the latest Android code look and search here: Android platform master Settings
 
 
-#GLOBAL
-
+### GLOBAL
+```
 settings put global HIC_enable 0
 
 settings put global activity_manager_constants max_cached_processes=16,power_check_max_cpu_1=50 # dumpsys activity settings
@@ -316,11 +316,11 @@ settings put global zram_enabled 1
 #mitv.user.settingTimezone 
 
 #device_tv_mode_settings 1 #1/2 RetailMode
+```
 
 
-
-#SYSTEM
-
+### SYSTEM
+```
 settings put system advanced_settings 1 #google settings
 
 settings put system auto_caps 0
@@ -375,10 +375,10 @@ settings put system volume_voice 12
 #tvapp_one_touch_play 1
 
 #soundbar_upgrade_flag_progress / soundbar_upgrade_flag_broken_time / soundbar_upgrade_flag_current_version / soundbar_upgrade_flag_expected_version
+```
 
-
-#SECURE
-
+### SECURE
+```
 #settings put secure gb_boosting 1 #??????
 
 #settings put secure maintenance_window "0400-0600"
@@ -450,7 +450,7 @@ settings put secure upload_log_pref 0
 settings put secure usb_audio_automatic_routing_disabled 1
 
 settings put secure wake_gesture_enabled 0
-
+```
 
 #allow_oaid_used 1 #what is OAID?
 
@@ -458,26 +458,27 @@ settings put secure wake_gesture_enabled 0
 TIP: Enable GPU rendering in Development Settings. It works good for me. (getprop persist.sys.ui.hw  should read true)
 
 
-Disable background tasks
+## Disable background tasks
 
 
 Some apps keep running in the background. We have little RAM. Less running activities is better.
 
-For getting all possible "autorun" activities you can type: pm query-receivers --components -a android.intent.action.BOOT_COMPLETED
+For getting all possible "autorun" activities you can type: `pm query-receivers --components -a android.intent.action.BOOT_COMPLETED`
 
 Note: we need root to disable Autoruns, but we can minimize backround processes
 
-To see the actual running apps and processes type: ps -A|grep "\."
+To see the actual running apps and processes type: `ps -A|grep "\."`
 
-To see what have been running on the device type: dumpsys cpuinfo
+To see what have been running on the device type: `dumpsys cpuinfo`
 
-Or to see live RAM usage: dumpsys meminfo
+Or to see live RAM usage: `dumpsys meminfo`
 
 
 Rule of thumb: use appops command to disable all your installed apps, including preinstalled Netflix and Amazon etc.
 
 For example if you don't use Amazon or Netflix then disable the package!!! See previous "disable packages".
 
+```
 #appops reset # reset all appops
 
 appops set com.mobdro.android RUN_IN_BACKGROUND ignore
@@ -529,23 +530,24 @@ appops write-settings
 appops query-op RUN_IN_BACKGROUND ignore
 
 appops query-op RUN_ANY_IN_BACKGROUND ignore
-
+```
 
 Text input on screen
 
 When in ADB shell use this command: input text "....."
 
 
-Get current temperature
+## Get current temperature
 
+```
 logcat -d|grep -i temp
 
 12-05 23:28:04.991  3015  3015 I ThermalHAL: current temperature:71.000000, throttling_threshold:95.000000, shutdown_threshold:120.000000
+```
 
+## Some trivial commands
 
-Some trivial commands
-
-
+```
 pm trim-caches 4096G
 
 svc data disable
@@ -563,36 +565,37 @@ dumpsys wifi |grep -i speed:   #get current wifi connection speed
 dumpsys jobscheduler #get jobscheduler Settings and BackgroundJobsController
 
 ps -ef  # list all processes
-
+```
 
 A good Internet Browser with Tabs and Ad Block is TV-BRO
 
 A good keyboard is LeanKeyKeyboard.
 
 
-Use another launcher
+## Use another launcher
 
 
 Install any launcher (here ATVlauncher pro) and disable default Android TV launcher
 
 Or better use newer use Wolf Launcher (based on ATV Launcher Pro, can be downloaded here on XDA, use CCGTV version, kudos to SweenWolf)
 
-First disable the default Android TV Launcher:  pm disable-user com.google.android.tvlauncher 
+First disable the default Android TV Launcher:  `pm disable-user com.google.android.tvlauncher`
 
 Now press the HOME button on the remote and select your new Home Launcher.
 
-Also use widgets in a Home Launcher? New launcher needs permissions:   appwidget grantbind --package ca.dstudio.atvlauncher.pro
+Also use widgets in a Home Launcher? New launcher needs permissions:   `appwidget grantbind --package ca.dstudio.atvlauncher.pro`
 
 ps: In fact you can set any activity as your Home Launcher. 
 
+```
 cmd package set-home-activity ca.dstudio.atvlauncher.free/ca.dstudio.atvlauncher.screens.launcher.LauncherActivity
 
 cmd shortcut get-default-launcher 
+```
 
+## Create an app backup and restore (WIP)
 
-Create an app backup and restore (WIP)
-
-
+```
 adb shell
 
 bmgr enabled          (is it enabled? )
@@ -803,8 +806,9 @@ ACTIVITY MANAGER SETTINGS activity_manager_constants:
   CUR_TRIM_EMPTY_PROCESSES=4
 
   CUR_TRIM_CACHED_PROCESSES=2
+```
 
-ScrCpy: Tool for remote control
+## ScrCpy: Tool for remote control
 
 
 This opensource tool called ScrCpy makes it possible to remote control your Android device using PC/Mac and keyboard and mouse.
